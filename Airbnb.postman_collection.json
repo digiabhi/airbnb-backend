@@ -25,10 +25,63 @@
 			"response": []
 		},
 		{
-			"name": "Create Hotel",
+			"name": "Delete Hotel",
 			"request": {
 				"method": "GET",
-				"header": []
+				"header": [],
+				"url": {
+					"raw": "{{dev_server}}/hotels/1",
+					"host": [
+						"{{dev_server}}"
+					],
+					"path": [
+						"hotels",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Hotels",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{dev_server}}/hotels",
+					"host": [
+						"{{dev_server}}"
+					],
+					"path": [
+						"hotels"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Hotel",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"JW Marriot\",\r\n    \"address\": \"Aerocity, New Delhi\",\r\n    \"location\": \"New Delhi\",\r\n    \"rating\": 0,\r\n    \"ratingCount\": 0\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{dev_server}}/hotels",
+					"host": [
+						"{{dev_server}}"
+					],
+					"path": [
+						"hotels"
+					]
+				}
 			},
 			"response": []
 		}
