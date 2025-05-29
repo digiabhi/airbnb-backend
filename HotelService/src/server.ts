@@ -8,6 +8,7 @@ import {
 } from './middlewares/error.midleware';
 import { attachCorrelationIdMiddleware } from './middlewares/correlation.middleware';
 import logger from './config/logger.config';
+import sequelize from './db/models/sequelize';
 
 const app = express();
 
@@ -19,6 +20,8 @@ app.use('/api/v2', v2Router);
 app.use(appErrorHandler);
 app.use(genericErrorHandler);
 
-app.listen(serverConfig.PORT, () => {
+app.listen(serverConfig.PORT, async () => {
   logger.info(`Server is running on http://localhost:${serverConfig.PORT}`);
+  await sequelize.authenticate(); // Test the connection to the DB.
+  logger.info('Database connected successfully!');
 });
