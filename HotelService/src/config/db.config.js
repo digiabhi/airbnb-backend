@@ -1,3 +1,7 @@
+const dotenv = require('dotenv');
+
+dotenv.config();
+
 const config = {
   development: {
     username: process.env.DB_USER || 'root',
@@ -8,4 +12,4 @@ const config = {
   },
 };
 
-export default config;
+module.exports = config;
