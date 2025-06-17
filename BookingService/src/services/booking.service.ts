@@ -6,26 +6,59 @@ import {
   getIdempotencyKeyWithLock,
 } from '../repositories/booking.repository';
 import { generateIdempotencyKey } from '../utils/generateIdempotencyKey';
-import { BadRequestError, NotFoundError } from '../utils/errors/app.error';
+import {
+  BadRequestError,
+  InternalServerError,
+  NotFoundError,
+} from '../utils/errors/app.error';
 import { CreateBookingDTO } from '../dto/booking.dto';
 import prismaClient from '../prisma/client';
+import { redlock } from '../config/redis.config';
+import { serverConfig } from '../config';
 
 export async function createBookingService(createBookingDTO: CreateBookingDTO) {
-  const booking = await createBooking({
-    userId: createBookingDTO.userId,
-    hotelId: createBookingDTO.hotelId,
-    totalGuests: createBookingDTO.totalGuests,
-    bookingAmount: createBookingDTO.bookingAmount,
-  });
+  const ttl = serverConfig.LOCK_TTL; // 5 minutes in milliseconds
+  const bookingResource = `hotel:${createBookingDTO.hotelId}`;
 
-  const idempotencyKey = generateIdempotencyKey();
+  try {
+    await redlock.acquire([bookingResource], ttl);  
+    const booking = await createBooking({
+      userId: createBookingDTO.userId,
+      hotelId: createBookingDTO.hotelId,
+      totalGuests: createBookingDTO.totalGuests,
+      bookingAmount: createBookingDTO.bookingAmount,
+    });
 
-  await createIdempotencyKey(idempotencyKey, booking.id);
+    const idempotencyKey = generateIdempotencyKey();
 
-  return {
-    bookingId: booking.id,
-    idempotencyKey: idempotencyKey,
-  };
+    await createIdempotencyKey(idempotencyKey, booking.id);
+
+    return {
+      bookingId: booking.id,
+      idempotencyKey: idempotencyKey,
+    };
+  } catch (error) {
+    throw new InternalServerError(
+      `Failed to acquire lock for booking resource`
+    );
+  }
+  // return await redlock.using([bookingResource], ttl, async () => {
+  //   const booking = await createBooking({
+  //   userId: createBookingDTO.userId,
+  //   hotelId: createBookingDTO.hotelId,
+  //   totalGuests: createBookingDTO.totalGuests,
+  //   bookingAmount: createBookingDTO.bookingAmount,
+  // });
+
+  // const idempotencyKey = generateIdempotencyKey();
+
+  // await createIdempotencyKey(idempotencyKey, booking.id);
+
+  // return {
+  //   bookingId: booking.id,
+  //   idempotencyKey: idempotencyKey,
+  // };
+  // }
 }
 
 export async function confirmBookingService(idempotencyKey: string) {
