@@ -9,7 +9,6 @@ import {
 import { attachCorrelationIdMiddleware } from './middlewares/correlation.middleware';
 import logger from './config/logger.config';
 import { setupMailerWorker } from './processors/email.processor';
-import { NotificationDTO } from './dto/notification.dto';
 import { addEmailToQueue } from './producers/email.producer';
 
 const app = express();
@@ -22,18 +21,18 @@ app.use('/api/v2', v2Router);
 app.use(appErrorHandler);
 app.use(genericErrorHandler);
 
-app.listen(serverConfig.PORT, () => {
+app.listen(serverConfig.PORT, async () => {
   logger.info(`Server is running on http://localhost:${serverConfig.PORT}`);
   setupMailerWorker();
   logger.info('Mailer worker has been set up');
-  const sampleNotification: NotificationDTO = {
-    to: 'sample notification',
-    subject: 'Sample Subject',
-    tempelateId: 'sample-template-id',
+
+  addEmailToQueue({
+    to: 'singhabhishek111213@gmail.com',
+    subject: 'Test Email',
+    templateId: 'welcome',
     params: {
-      name: 'Sample Name',
-      message: 'This is a sample notification message',
+      name: 'Abhishek Singh',
+      appName: 'Airbnb.com',
     },
-  };
-  addEmailToQueue(sampleNotification);
+  });
 });
