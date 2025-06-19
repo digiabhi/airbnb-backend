@@ -8,6 +8,7 @@ import {
 } from './middlewares/error.midleware';
 import { attachCorrelationIdMiddleware } from './middlewares/correlation.middleware';
 import logger from './config/logger.config';
+import { addEmailToQueue } from './producers/email.producer';
 
 const app = express();
 
@@ -21,4 +22,13 @@ app.use(genericErrorHandler);
 
 app.listen(serverConfig.PORT, () => {
   logger.info(`Server is running on http://localhost:${serverConfig.PORT}`);
+  addEmailToQueue({
+    to: 'sample booking',
+    subject: 'Sample Subject',
+    templateId: 'sample-template-id',
+    params: {
+      name: 'Sample Name',
+      message: 'This is a sample booking message',
+    },
+  });
 });
