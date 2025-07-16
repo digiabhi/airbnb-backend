@@ -1,6 +1,7 @@
 package app
 
 import (
+	config "AuthService/config/env"
 	"fmt"
 	"net/http"
 	"time"
@@ -16,7 +17,8 @@ type Application struct {
 }
 
 // Constructor for setting the configuration of the application.
-func SetConfig(port string) Config {
+func SetConfig() Config {
+	port := config.GetString("PORT", ":3000")
 	return Config{
 		Port: port,
 	}
