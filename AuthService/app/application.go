@@ -1,9 +1,11 @@
 package app
 
 import (
+	dbConfig "AuthService/config/db"
 	config "AuthService/config/env"
 	"AuthService/controllers"
 	db "AuthService/db/repositories"
+	repo "AuthService/db/repositories"
 	"AuthService/router"
 	"AuthService/services"
 	"fmt"
@@ -38,8 +40,12 @@ func NewApplication(cfg Config) *Application {
 }
 
 func (app *Application) Run() error {
-
-	ur := db.NewUserRepository()
+	db, err := dbConfig.SetupDB()
+	if err != nil {
+		fmt.Println("Failed to connect to the database:", err)
+		return err
+	}
+	ur := repo.NewUserRepository(db)
 	us := services.NewUserService(ur)
 	uc := controllers.NewUserController(us)
 	uRouter := router.NewUserRouter(uc)
