@@ -2,8 +2,8 @@ package router
 
 import (
 	"AuthService/controllers"
-
 	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 )
 
 type Router interface {
@@ -12,7 +12,9 @@ type Router interface {
 
 func SetupRouter(UserRouter Router) *chi.Mux {
 	chiRouter := chi.NewRouter()
+	//chiRouter.Use(middlewares.RequestLogger)
 
+	chiRouter.Use(middleware.Logger)
 	chiRouter.Get("/ping", controllers.PingHandler)
 
 	UserRouter.Register(chiRouter)

@@ -3,6 +3,7 @@ package services
 import (
 	env "AuthService/config/env"
 	db "AuthService/db/repositories"
+	"AuthService/dto"
 	"AuthService/utils"
 	"fmt"
 	"github.com/golang-jwt/jwt/v5"
@@ -11,7 +12,7 @@ import (
 type UserService interface {
 	GetUserByID() error
 	CreateUser() error
-	LoginUser() (string, error)
+	LoginUser(payload *dto.LoginUserRequestDTO) (string, error)
 }
 
 type UserServiceImpl struct {
@@ -35,9 +36,9 @@ func (u *UserServiceImpl) CreateUser() error {
 	return nil
 }
 
-func (u *UserServiceImpl) LoginUser() (string, error) {
-	email := "testemail@email.com"
-	password := "test-password"
+func (u *UserServiceImpl) LoginUser(payload *dto.LoginUserRequestDTO) (string, error) {
+	email := payload.Email
+	password := payload.Password
 	user, err := u.userRepository.GetByEmail(email)
 	if err != nil {
 		fmt.Println("Error fetching user by email:", err)
@@ -55,12 +56,12 @@ func (u *UserServiceImpl) LoginUser() (string, error) {
 		return "", nil
 	}
 
-	payload := jwt.MapClaims{
+	jwtPayload := jwt.MapClaims{
 		"email": user.Email,
 		"id":    user.ID,
 	}
 
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, payload)
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwtPayload)
 
 	tokenString, err := token.SignedString([]byte(env.GetString("JWT_SECRET", "TOKEN_SECRET")))
 
