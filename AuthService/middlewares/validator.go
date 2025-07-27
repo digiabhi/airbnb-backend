@@ -56,7 +56,7 @@ func UserCreateRequestValidator(next http.Handler) http.Handler {
 			err := utils.WriteJSONErrorResponse(w, http.StatusBadRequest, "Validation failed", err)
 			if err != nil {
 				return
-			}g
+			}
 			return
 		}
 
