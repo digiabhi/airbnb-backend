@@ -97,6 +97,7 @@ func (u *UserServiceImpl) LoginUser(payload *dto.LoginUserRequestDTO) (string, e
 	email := payload.Email
 	password := payload.Password
 	user, err := u.userRepository.GetByEmail(email)
+	fmt.Println(user)
 	if err != nil {
 		fmt.Println("Error fetching user by email:", err)
 		return "", err

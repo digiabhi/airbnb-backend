@@ -1,5 +1,5 @@
 MIGRATIONS_FOLDER=db/migrations
-DB_URL=root:Mysqllocal@123@tcp(localhost:3306)/auth_db
+DB_URL=root:root@tcp(localhost:3306)/auth_db
 
 #Create a new migration -> make migrate-create name="your_migration_name"
 migrate-create:

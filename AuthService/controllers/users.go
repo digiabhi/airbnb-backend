@@ -21,10 +21,13 @@ func NewUserController(_userService services.UserService) *UserController {
 func (uc *UserController) GetUserByID(w http.ResponseWriter, r *http.Request) {
 	userID := r.URL.Query().Get("id")
 	if userID == "" {
+		userID = r.Context().Value("userId").(string)
+		return
+	}
+	if userID == "" {
 		utils.WriteJSONErrorResponse(w, http.StatusBadRequest, "User ID is required", nil)
 		return
 	}
-
 	fmt.Println("UserController: GetUserByID called with ID:", userID)
 	user, err := uc.UserService.GetUserByID(userID)
 	if err != nil {
@@ -39,18 +42,19 @@ func (uc *UserController) GetUserByID(w http.ResponseWriter, r *http.Request) {
 }
 
 func (uc *UserController) CreateUser(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("UserController: CreateUser called")
-	var payload dto.CreateUserRequestDTO
-	if jsonErr := utils.ReadJSONBody(r, &payload); jsonErr != nil {
-		utils.WriteJSONErrorResponse(w, http.StatusBadRequest, "Something went wrong while creating user", jsonErr)
-		return
-	}
+	payload := r.Context().Value("payload").(dto.CreateUserRequestDTO)
+
+	fmt.Println("Payload received:", payload)
+
 	user, err := uc.UserService.CreateUser(&payload)
+
 	if err != nil {
 		utils.WriteJSONErrorResponse(w, http.StatusInternalServerError, "Failed to create user", err)
 		return
 	}
+
 	utils.WriteJSONSuccessResponse(w, http.StatusCreated, "User created successfully", user)
+	fmt.Println("User created successfully:", user)
 }
 
 func (uc *UserController) LoginUser(w http.ResponseWriter, r *http.Request) {

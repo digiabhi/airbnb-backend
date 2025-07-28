@@ -70,13 +70,13 @@ func (u *UserRepositoryImpl) GetByID(id string) (*models.User, error) {
 }
 
 func (u *UserRepositoryImpl) GetByEmail(email string) (*models.User, error) {
-	query := "SELECT username, email, password FROM users WHERE email = ?"
+	query := "SELECT id, username, email, password FROM users WHERE email = ?"
 
 	row := u.db.QueryRow(query, email)
 
 	user := &models.User{}
 
-	err := row.Scan(&user.Username, &user.Email, &user.Password)
+	err := row.Scan(&user.Id, &user.Username, &user.Email, &user.Password)
 
 	if err != nil {
 		if err == sql.ErrNoRows {

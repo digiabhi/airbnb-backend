@@ -59,8 +59,9 @@ func UserCreateRequestValidator(next http.Handler) http.Handler {
 			}
 			return
 		}
+		fmt.Println("Payload received for login:", payload)
 
-		ctx := context.WithValue(r.Context(), "payload", payload)
+		ctx := context.WithValue(r.Context(), "payload", payload) // Create a new context with the payload
 
 		next.ServeHTTP(w, r.WithContext(ctx)) // Call the next handler in the chain
 	})
