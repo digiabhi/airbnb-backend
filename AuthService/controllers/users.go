@@ -18,27 +18,31 @@ func NewUserController(_userService services.UserService) *UserController {
 	}
 }
 
-func (uc *UserController) GetUserByID(w http.ResponseWriter, r *http.Request) {
-	userID := r.URL.Query().Get("id")
-	if userID == "" {
-		userID = r.Context().Value("userId").(string)
+func (uc *UserController) GetUserById(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Fetching user by ID in UserController")
+	// extract userid from url parameters
+	userId := r.URL.Query().Get("id")
+	if userId == "" {
+		userId = r.Context().Value("userID").(string) // Fallback to context if not in URL
+	}
+
+	fmt.Println("User ID from context or query:", userId)
+
+	if userId == "" {
+		utils.WriteJSONErrorResponse(w, http.StatusBadRequest, "User ID is required", fmt.Errorf("missing user ID"))
 		return
 	}
-	if userID == "" {
-		utils.WriteJSONErrorResponse(w, http.StatusBadRequest, "User ID is required", nil)
-		return
-	}
-	fmt.Println("UserController: GetUserByID called with ID:", userID)
-	user, err := uc.UserService.GetUserByID(userID)
+	user, err := uc.UserService.GetUserByID(userId)
 	if err != nil {
 		utils.WriteJSONErrorResponse(w, http.StatusInternalServerError, "Failed to fetch user", err)
 		return
 	}
 	if user == nil {
-		utils.WriteJSONErrorResponse(w, http.StatusNotFound, "User not found", nil)
+		utils.WriteJSONErrorResponse(w, http.StatusNotFound, "User not found", fmt.Errorf("user with ID %d not found", userId))
 		return
 	}
 	utils.WriteJSONSuccessResponse(w, http.StatusOK, "User fetched successfully", user)
+	fmt.Println("User fetched successfully:", user)
 }
 
 func (uc *UserController) CreateUser(w http.ResponseWriter, r *http.Request) {
