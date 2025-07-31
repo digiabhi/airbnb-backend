@@ -3,6 +3,7 @@ package controllers
 import (
 	"AuthService/services"
 	"AuthService/utils"
+	"github.com/go-chi/chi/v5"
 	"net/http"
 	"strconv"
 )
@@ -18,7 +19,7 @@ func NewRoleController(roleService services.RoleService) *RoleController {
 }
 
 func (rc *RoleController) GetRoleById(w http.ResponseWriter, r *http.Request) {
-	roleId := r.URL.Query().Get("id")
+	roleId := chi.URLParam(r, "id")
 	if roleId == "" {
 		utils.WriteJSONErrorResponse(w, http.StatusBadRequest, "Role ID is required", nil)
 		return
