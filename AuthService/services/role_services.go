@@ -14,6 +14,8 @@ type RoleService interface {
 	UpdateRole(id int64, name string, description string) (*models.Role, error)
 	GetRolePermissions(roleId int64) ([]*models.RolePermission, error)
 	AddPermissionToRole(roleId int64, permissionId int64) (*models.RolePermission, error)
+	RemovePermissionFromRole(roleId int64, permissionId int64) error
+	GetAllRolePermissions() ([]*models.RolePermission, error)
 }
 
 type RoleServiceImpl struct {
@@ -90,4 +92,20 @@ func (s *RoleServiceImpl) AddPermissionToRole(roleId int64, permissionId int64) 
 		return nil, err
 	}
 	return rolePermission, nil
+}
+
+func (s *RoleServiceImpl) RemovePermissionFromRole(roleId int64, permissionId int64) error {
+	err := s.rolePermissionRepository.RemovePermissionFromRole(roleId, permissionId)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *RoleServiceImpl) GetAllRolePermissions() ([]*models.RolePermission, error) {
+	permissions, err := s.rolePermissionRepository.GetAllRolePermissions()
+	if err != nil {
+		return nil, err
+	}
+	return permissions, nil
 }
