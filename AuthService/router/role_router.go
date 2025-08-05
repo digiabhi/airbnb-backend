@@ -26,4 +26,5 @@ func (rr *RoleRouter) Register(r chi.Router) {
 	r.With(middlewares.AssignPermissionRequestValidator).Post("/roles/{id}/permissions", rr.RoleController.AssignPermissionToRole)
 	r.With(middlewares.RemovePermissionRequestValidator).Delete("/roles/{id}/permissions/{permissionId}", rr.RoleController.RemovePermissionFromRole)
 	r.Get("/roles/permissions", rr.RoleController.GetAllRolePermissions)
+	r.With(middlewares.JWTAuthMiddleware, middlewares.RequireAllRoles("admin")).Post("/roles/{userId}/assign/{roleId}", rr.RoleController.AssignRoleToUser)
 }

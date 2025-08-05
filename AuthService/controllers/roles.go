@@ -199,3 +199,36 @@ func (rc *RoleController) GetAllRolePermissions(w http.ResponseWriter, r *http.R
 
 	utils.WriteJSONSuccessResponse(w, http.StatusOK, "All role permissions fetched successfully", permissions)
 }
+
+func (rc *RoleController) AssignRoleToUser(w http.ResponseWriter, r *http.Request) {
+	userId := chi.URLParam(r, "userId")
+	roleId := chi.URLParam(r, "roleId")
+	if userId == "" {
+		utils.WriteJSONErrorResponse(w, http.StatusBadRequest, "User ID is required", fmt.Errorf("User ID is missing"))
+		return
+	}
+	if roleId == "" {
+		utils.WriteJSONErrorResponse(w, http.StatusBadRequest, "Role ID is required", fmt.Errorf("Role ID is missing"))
+		return
+	}
+
+	roleIdInt, err := strconv.ParseInt(roleId, 10, 64)
+	if err != nil {
+		utils.WriteJSONErrorResponse(w, http.StatusBadRequest, "Invalid Role ID format", err)
+		return
+	}
+
+	userIdInt, err := strconv.ParseInt(userId, 10, 64)
+	if err != nil {
+		utils.WriteJSONErrorResponse(w, http.StatusBadRequest, "Invalid User ID format", err)
+		return
+	}
+
+	err = rc.RoleService.AssignRoleToUser(userIdInt, roleIdInt)
+	if err != nil {
+		utils.WriteJSONErrorResponse(w, http.StatusInternalServerError, "Failed to assign role to user", err)
+		return
+	}
+
+	utils.WriteJSONSuccessResponse(w, http.StatusOK, "Role assigned to user successfully", nil)
+}
