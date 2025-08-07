@@ -1,6 +1,7 @@
 import {CreateRoomCategoryDto} from "../dto/roomCategory.dto";
 import {NotFoundError} from "../utils/errors/app.error";
 import RoomCategoryRepository from "../repositories/roomCategory.repository";
+import {HotelRepository} from "../repositories/hotels.repository";
 
 const roomCategoryRepository = new RoomCategoryRepository();
 const hotelRepository = new HotelRepository();
