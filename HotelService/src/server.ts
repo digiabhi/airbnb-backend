@@ -9,6 +9,7 @@ import {
 import { attachCorrelationIdMiddleware } from './middlewares/correlation.middleware';
 import logger from './config/logger.config';
 import sequelize from './db/models/sequelize';
+import {setupRoomGenerationWorker} from "./processors/roomGeneration.processor";
 
 const app = express();
 
@@ -24,4 +25,5 @@ app.listen(serverConfig.PORT, async () => {
   logger.info(`Server is running on http://localhost:${serverConfig.PORT}`);
   await sequelize.authenticate(); // Test the connection to the DB.
   logger.info('Database connected successfully!');
+  setupRoomGenerationWorker()
 });
