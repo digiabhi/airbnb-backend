@@ -2,7 +2,7 @@ import RoomCategory from "../db/models/roomCategory";
 import BaseRepository from "./base.repository";
 import {NotFoundError} from "../utils/errors/app.error";
 
-class RoomCategoryRepository extends BaseRepository<RoomCategory> {
+export class RoomCategoryRepository extends BaseRepository<RoomCategory> {
     constructor() {
         super(RoomCategory);
     }
@@ -22,5 +22,3 @@ class RoomCategoryRepository extends BaseRepository<RoomCategory> {
         return roomCategories;
     }
 }
-
-export default RoomCategoryRepository;

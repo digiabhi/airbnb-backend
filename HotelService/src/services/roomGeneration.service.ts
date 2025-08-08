@@ -1,5 +1,5 @@
 import {RoomGenerationJob} from "../dto/roomGeneration.dto";
-import RoomCategoryRepository from "../repositories/roomCategory.repository";
+import {RoomCategoryRepository} from "../repositories/roomCategory.repository";
 import {BadRequestError, NotFoundError} from "../utils/errors/app.error";
 import RoomCategory from "../db/models/roomCategory";
 import {RoomRepository} from "../repositories/room.repository";
