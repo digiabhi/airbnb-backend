@@ -76,7 +76,7 @@ export async function processDateBatch(roomCategory: RoomCategory, startDate: Da
             roomsToCreate.push({
                 hotelId: roomCategory.hotelId,
                 roomCategoryId: roomCategory.id,
-                dateOfAvailability: currentDate,
+                dateOfAvailability: new Date(currentDate),
                 price: priceOverride || roomCategory.price,
                 createdAt: new Date(),
                 updatedAt: new Date(),

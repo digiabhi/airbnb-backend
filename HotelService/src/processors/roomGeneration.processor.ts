@@ -30,8 +30,8 @@ export const setupRoomGenerationWorker = () => {
         console.error('Error processing room generation:', error);
     });
 
-    roomGenerationProcessor.on('failed', () => {
-        console.error('Room generation processing failed');
+    roomGenerationProcessor.on('failed', (_, error, __) => {
+        console.error('Room generation processing failed' ,error);
     });
 
     roomGenerationProcessor.on('completed', ()  => {
