@@ -1,4 +1,4 @@
-import {z} from 'zod';
+import {z} from 'zod'
 
 export const RoomGenerationRequestSchema = z.object({
     roomCategoryId: z.number().positive(),
@@ -14,7 +14,7 @@ export const RoomGenerationJobSchema = z.object({
     startDate:z.string().datetime(),
     endDate: z.string().datetime(),
     priceOverride: z.number().positive().optional(),
-    batchSize: z.number().positive().default(100)
+    batchSize: z.number().int().positive().default(100),
 });
 
 export type RoomGenerationJob = z.infer<typeof RoomGenerationJobSchema>;
