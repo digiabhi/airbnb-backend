@@ -7,6 +7,7 @@ export const validateRequestBody = (schema: AnyZodObject) => {
       await schema.parseAsync(req.body);
       next();
     } catch (error) {
+        console.log(error);
       // If the validation fails
       res.status(400).json({
         message: 'invalid request body',

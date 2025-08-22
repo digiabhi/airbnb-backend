@@ -9,4 +9,7 @@ export const createBookingSchema = z.object({
   bookingAmount: z
     .number({ message: 'Booking amount must be present' })
     .min(1, { message: 'Booking amount must be at least 0' }),
+    checkInDate: z.string({ message: 'Check-in date must be present' }),
+    checkOutDate: z.string({ message: 'Check-out date must be present' }),
+    roomCategoryId: z.number({ message: 'Room category ID must be present' }),
 });

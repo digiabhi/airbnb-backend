@@ -1,7 +1,7 @@
 {
-  "name": "expresstypescripttemplate",
+  "name": "BookingService",
   "version": "1.0.0",
-  "description": "Basic node express typescript boilerplate for any ts project setup",
+  "description": "Booking Microservice",
   "main": "index.js",
   "scripts": {
     "start": "ts-node src/server.ts",
@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "@prisma/client": "^6.9.0",
+    "axios": "^1.11.0",
     "bullmq": "^5.54.3",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",

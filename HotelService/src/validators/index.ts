@@ -4,9 +4,11 @@ import { AnyZodObject } from 'zod';
 export const validateRequestBody = (schema: AnyZodObject) => {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
+        console.log(req.body);
       await schema.parseAsync(req.body);
       next();
     } catch (error) {
+        console.log(error);
       // If the validation fails
       res.status(400).json({
         message: 'invalid request body',
